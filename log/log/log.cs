@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace log
 {
@@ -14,6 +15,8 @@ namespace log
     //缺点：可能在大量数据未写完就退出程序，导致数据不完整。
     public static class log
     {
+        public static bool DebugMode = false; //会显示堆栈信息
+
         public enum enDirection
         {
             Send,
@@ -93,7 +96,14 @@ namespace log
         }
         public static void WriteLine(string msg)
         {
-            Base.WriteLine(DateTime.Now.ToString("[HH:mm:ss:fff] ") + msg);
+            msg = DateTime.Now.ToString("[HH:mm:ss:fff] ") + msg;
+            if (DebugMode == true)
+            {
+                string stackInfo = new StackTrace().ToString();
+                msg += "\n- - - - - - - - - - - - - - Stack Info - - - - - - - - - - - - - - -\n";
+                msg += stackInfo;
+            }
+            Base.WriteLine(msg);
         }
         public static void Delete()
         {
